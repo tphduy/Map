@@ -11,7 +11,16 @@ import SwiftUI
 struct MapApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                CarrierPicker(
+                    referencePoint: .Preview.applePark,
+                    points: [
+                        .Preview.theDukeOfEdinburgh,
+                        .Preview.wolfeLiquor
+                    ],
+                    selectedIndexes: [1]
+                )
+            }
         }
     }
 }

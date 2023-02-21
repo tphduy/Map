@@ -7,13 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D99362E29A3988200094239 /* PickupPointMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D99362D29A3988200094239 /* PickupPointMap.swift */; };
+		3D9C2DEB298774FE00E340BC /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9C2DEA298774FE00E340BC /* LocationManager.swift */; };
 		3DE7928D297F7AEB00A101A0 /* MapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE7928C297F7AEB00A101A0 /* MapApp.swift */; };
-		3DE7928F297F7AEB00A101A0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE7928E297F7AEB00A101A0 /* ContentView.swift */; };
+		3DE7928F297F7AEB00A101A0 /* CarrierPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE7928E297F7AEB00A101A0 /* CarrierPicker.swift */; };
 		3DE79291297F7AEC00A101A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DE79290297F7AEC00A101A0 /* Assets.xcassets */; };
 		3DE79295297F7AEC00A101A0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DE79294297F7AEC00A101A0 /* Preview Assets.xcassets */; };
 		3DE7929F297F7AEC00A101A0 /* MapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE7929E297F7AEC00A101A0 /* MapTests.swift */; };
 		3DE792A9297F7AEC00A101A0 /* MapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE792A8297F7AEC00A101A0 /* MapUITests.swift */; };
 		3DE792AB297F7AEC00A101A0 /* MapUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE792AA297F7AEC00A101A0 /* MapUITestsLaunchTests.swift */; };
+		3DF9A00C298BB78800CA243A /* PickupPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9A00B298BB78800CA243A /* PickupPoint.swift */; };
+		3DFBC11929A4BA31008864EA /* AnyMapAnnotationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBC11829A4BA31008864EA /* AnyMapAnnotationProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +38,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3D99362D29A3988200094239 /* PickupPointMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupPointMap.swift; sourceTree = "<group>"; };
+		3D9C2DEA298774FE00E340BC /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		3DE79289297F7AEB00A101A0 /* Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Map.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DE7928C297F7AEB00A101A0 /* MapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapApp.swift; sourceTree = "<group>"; };
-		3DE7928E297F7AEB00A101A0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		3DE7928E297F7AEB00A101A0 /* CarrierPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrierPicker.swift; sourceTree = "<group>"; };
 		3DE79290297F7AEC00A101A0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3DE79292297F7AEC00A101A0 /* Map.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Map.entitlements; sourceTree = "<group>"; };
 		3DE79294297F7AEC00A101A0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -45,6 +51,8 @@
 		3DE792A4297F7AEC00A101A0 /* MapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DE792A8297F7AEC00A101A0 /* MapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUITests.swift; sourceTree = "<group>"; };
 		3DE792AA297F7AEC00A101A0 /* MapUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3DF9A00B298BB78800CA243A /* PickupPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupPoint.swift; sourceTree = "<group>"; };
+		3DFBC11829A4BA31008864EA /* AnyMapAnnotationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyMapAnnotationProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,7 +104,11 @@
 			isa = PBXGroup;
 			children = (
 				3DE7928C297F7AEB00A101A0 /* MapApp.swift */,
-				3DE7928E297F7AEB00A101A0 /* ContentView.swift */,
+				3DE7928E297F7AEB00A101A0 /* CarrierPicker.swift */,
+				3DF9A00B298BB78800CA243A /* PickupPoint.swift */,
+				3D99362D29A3988200094239 /* PickupPointMap.swift */,
+				3DFBC11829A4BA31008864EA /* AnyMapAnnotationProtocol.swift */,
+				3D9C2DEA298774FE00E340BC /* LocationManager.swift */,
 				3DE79290297F7AEC00A101A0 /* Assets.xcassets */,
 				3DE79292297F7AEC00A101A0 /* Map.entitlements */,
 				3DE79293297F7AEC00A101A0 /* Preview Content */,
@@ -259,8 +271,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DE7928F297F7AEB00A101A0 /* ContentView.swift in Sources */,
+				3DE7928F297F7AEB00A101A0 /* CarrierPicker.swift in Sources */,
+				3DFBC11929A4BA31008864EA /* AnyMapAnnotationProtocol.swift in Sources */,
 				3DE7928D297F7AEB00A101A0 /* MapApp.swift in Sources */,
+				3DF9A00C298BB78800CA243A /* PickupPoint.swift in Sources */,
+				3D99362E29A3988200094239 /* PickupPointMap.swift in Sources */,
+				3D9C2DEB298774FE00E340BC /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +435,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Lorem ipsum";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -457,6 +474,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Lorem ipsum";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
