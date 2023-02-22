@@ -69,17 +69,15 @@ struct PickupPointMap: View {
 
     func selectedAnnotation(at coordinate: CLLocationCoordinate2D) -> some MapAnnotationProtocol {
         MapAnnotation(coordinate: coordinate) {
-            Image(systemName: "mappin")
+            PickupPointMapAnnotation()
                 .foregroundColor(.green)
-                .font(.title)
         }
     }
 
     func unselectedAnnotation(at coordinate: CLLocationCoordinate2D) -> some MapAnnotationProtocol {
         MapAnnotation(coordinate: coordinate) {
-            Image(systemName: "mappin")
+            PickupPointMapAnnotation()
                 .foregroundColor(.black)
-                .font(.title)
         }
     }
 

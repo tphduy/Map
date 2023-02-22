@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 /// A view that lets user pick an available pickup poitns on map or from a list.
-struct CarrierPicker: View {
+struct PickupPointPicker: View {
     // MARK: States
 
     @State var referencePoint: PickupPoint?
@@ -23,6 +23,9 @@ struct CarrierPicker: View {
     /// An action that dismisses the current presentation
     @Environment(\.dismiss) var dismiss
 
+    @Environment(\.dismissSearch)
+    private var dismissSearch
+
     // MARK: View
 
     var body: some View {
@@ -34,20 +37,10 @@ struct CarrierPicker: View {
             }
         }
         .listStyle(.plain)
-        .searchable(text: $keywords)
-        .tint(.black)
         .navigationTitle("Choose a pick-up point")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            closeToolbarItem
-        }
-    }
-
-    var closeToolbarItem: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button(action: dismiss.callAsFunction) {
-                Label("", systemImage: "xmark")
-            }
+        .searchable(text: $keywords, prompt: "Address")
+        .onSubmit(of: .search) {
+            dismissSearch()
         }
     }
 
@@ -62,8 +55,10 @@ struct CarrierPicker: View {
     }
 
     var list: some View {
-        ForEach(points + points + points + points) { (deliveryHubs: PickupPoint) in
-            deliveryHubs.carrier?.name.map { Text($0) }
+        ForEach(points) { (deliveryHubs: PickupPoint) in
+            deliveryHubs.carrier?.name.map {
+                Text([$0, $0, $0, $0, $0, $0, $0, $0, $0].joined(separator: "\n"))
+            }
         }
     }
 }
@@ -71,13 +66,15 @@ struct CarrierPicker: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            CarrierPicker(
+            PickupPointPicker(
                 referencePoint: .Preview.applePark,
                 points: [
                     .Preview.theDukeOfEdinburgh,
                     .Preview.wolfeLiquor
-                ]
+                ],
+                selectedIndexes: [1]
             )
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

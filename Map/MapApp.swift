@@ -9,18 +9,25 @@ import SwiftUI
 
 @main
 struct MapApp: App {
+
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                CarrierPicker(
-                    referencePoint: .Preview.applePark,
-                    points: [
-                        .Preview.theDukeOfEdinburgh,
-                        .Preview.wolfeLiquor
-                    ],
-                    selectedIndexes: [1]
-                )
+                NavigationLink("Start", destination: { pickupPointPicker })
             }
+        }
+    }
+
+    var pickupPointPicker: some View {
+        NavigationStack {
+            PickupPointPicker(
+                referencePoint: .Preview.applePark,
+                points: [
+                    .Preview.theDukeOfEdinburgh,
+                    .Preview.wolfeLiquor
+                ],
+                selectedIndexes: [1]
+            )
         }
     }
 }
