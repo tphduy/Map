@@ -9,18 +9,18 @@ import Foundation
 import Combine
 import Contacts
 import CoreLocation
+import MapKit
 
 final class PickupPointPickerViewModel: ObservableObject {
     // MARK: States
 
-    @Published var referencePoint: PickupPoint?
-    @Published var selected: PickupPoint?
-    @Published var keywords = ""
-    @Published var state: Loadable<[PickupPoint], Error> = .isLoading(last: nil)
+    @Published var center: PickupPoint?
 
-    var points: [PickupPoint] {
-        state.data ?? []
-    }
+    @Published var selected: PickupPoint?
+
+    @Published var keywords: String = ""
+
+    @Published var state: Loadable<[PickupPoint], Error> = .isLoading(last: nil)
 
     // MARK: Dependencies
 
@@ -47,37 +47,17 @@ final class PickupPointPickerViewModel: ObservableObject {
     func didSubmitSearch() {
         // Verifies that the keywords are some.
         guard !keywords.isEmpty else { return resetData() }
+        selected = nil
         state = .isLoading(last: state.data)
-        let geocoding = geocodingDataLogic
-            .geocode(address: keywords)
-            .share()
+        let geocoding = geocodingDataLogic.geocode(address: keywords).share()
         updateReferencePoint(to: geocoding)
         updatePickupPoints(to: geocoding)
-
     }
 
     private func resetData() {
-        referencePoint = nil
+        center = nil
         selected = nil
         state = .loaded([])
-    }
-
-    private func updateReferencePoint(to placemark: CLPlacemark) {
-        referencePoint = PickupPoint(
-            address: placemark.postalAddress?.street,
-            postcode: placemark.postalAddress?.postalCode,
-            name: nil,
-            hasDisabledAccess: nil,
-            city: placemark.postalAddress?.city,
-            reference: nil,
-            location: PickupPoint.Location(
-                latitude: placemark.location?.coordinate.latitude ?? 0,
-                longitude: placemark.location?.coordinate.longitude ?? 0),
-            carrier: nil,
-            openingTimes: nil,
-            distance: nil,
-            isLegacyPickup: nil
-        )
     }
 
     private func updateReferencePoint(to geocoding: Publishers.Share<AnyPublisher<CLPlacemark, Error>>) {
@@ -87,14 +67,14 @@ final class PickupPointPickerViewModel: ObservableObject {
                 guard case .failure = completion else { return }
                 self.resetData()
             } receiveValue: { (placemark: CLPlacemark) in
-                self.updateReferencePoint(to: placemark)
+                guard let coordinate = placemark.location?.coordinate else { return self.resetData() }
+                let location = PickupPoint.Location(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                self.center = PickupPoint(location: location)
             }
             .store(in: &cancellables)
     }
 
     private func updatePickupPoints(to geocoding: Publishers.Share<AnyPublisher<CLPlacemark, Error>>) {
-        selected = nil
-
         geocoding
             .compactMap(\.postalAddress)
             .flatMap { (address: CNPostalAddress) -> AnyPublisher<[PickupPoint], Error> in
@@ -111,9 +91,39 @@ final class PickupPointPickerViewModel: ObservableObject {
                 guard case let .failure(error) = completion else { return }
                 self.state = .failed(error)
             } receiveValue: { (points: [PickupPoint]) in
-                self.resetData()
                 self.state = .loaded(points)
             }
             .store(in: &cancellables)
+    }
+}
+
+extension PickupPointPickerViewModel {
+    
+    static var defaultCoordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: 37.334_900, longitude: -122.009_020)
+    }
+
+    static var defaultCoordinateMeters: Double {
+        1200
+    }
+
+    static var defaultRegion: MKCoordinateRegion {
+        MKCoordinateRegion(
+            center: defaultCoordinate,
+            latitudinalMeters: defaultCoordinateMeters,
+            longitudinalMeters: defaultCoordinateMeters
+        )
+    }
+}
+
+extension PickupPointPickerViewModel {
+
+    static var preview: PickupPointPickerViewModel {
+        let result = PickupPointPickerViewModel()
+        result.center = .Preview.applePark
+        result.selected = .Preview.theDukeOfEdinburgh
+        result.keywords = "Apple park"
+        result.state = .loaded([.Preview.theDukeOfEdinburgh, .Preview.wolfeLiquor])
+        return result
     }
 }

@@ -12,21 +12,12 @@ import MapKit
 struct PickupPointPicker: View {
     // MARK: States
 
-    @ObservedObject var viewModel = PickupPointPickerViewModel()
-
-    /// An action that dismisses the current presentation
-    @Environment(\.dismiss) var dismiss
+    @StateObject var viewModel = PickupPointPickerViewModel()
 
     // MARK: View
 
     var body: some View {
-        List(selection: $viewModel.selected) {
-            Section {
-                listContent
-            } header: {
-                map
-            }
-        }
+        content
         .listStyle(.plain)
         .navigationTitle("Choose a pick-up point")
         .searchable(text: $viewModel.keywords, prompt: "Address")
@@ -35,10 +26,28 @@ struct PickupPointPicker: View {
         }
     }
 
+    @ViewBuilder @MainActor
+    var content: some View {
+        switch viewModel.state {
+        case let .failed(error):
+            Text(error.localizedDescription)
+        case .isLoading:
+            ProgressView()
+        case .loaded:
+            List(selection: $viewModel.selected) {
+                Section {
+                    listContent
+                } header: {
+                    map
+                }
+            }
+        }
+    }
+
     var map: some View {
         PickupPointMap(
-            referencePoint: viewModel.referencePoint,
-            points: viewModel.points,
+            points: viewModel.state.data ?? [],
+            center: $viewModel.center,
             selected: $viewModel.selected
         )
         .scaledToFill()
@@ -47,26 +56,18 @@ struct PickupPointPicker: View {
 
     var listContent: some View {
         PickupPointListContent(
-            points: viewModel.points,
+            points: viewModel.state.data ?? [],
             selected: $viewModel.selected
         )
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
-    private static var viewModel: PickupPointPickerViewModel {
-        let result = PickupPointPickerViewModel()
-        result.keywords = "Apple Park"
-        result.referencePoint = .Preview.applePark
-        result.selected = .Preview.theDukeOfEdinburgh
-        result.state = .loaded([.Preview.theDukeOfEdinburgh, .Preview.wolfeLiquor])
-        return result
-    }
 
     static var previews: some View {
         NavigationStack {
-            PickupPointPicker(viewModel: viewModel)
-            .navigationBarTitleDisplayMode(.inline)
+            PickupPointPicker(viewModel: .preview)
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

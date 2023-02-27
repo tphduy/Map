@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3D3DF67E29AC5CA10041E470 /* PickupPointDataLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3DF67D29AC5CA10041E470 /* PickupPointDataLogic.swift */; };
 		3D4511BD29AC996800CC3F97 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D4511BC29AC996800CC3F97 /* CoreLocation.framework */; };
+		3D4511BF29ACA7C300CC3F97 /* CLLocationCoordinate2D+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4511BE29ACA7C300CC3F97 /* CLLocationCoordinate2D+Equatable.swift */; };
 		3D99362E29A3988200094239 /* PickupPointMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D99362D29A3988200094239 /* PickupPointMap.swift */; };
 		3D9AEFDF29AC715D0020DE63 /* GeocodingDataLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9AEFDE29AC715D0020DE63 /* GeocodingDataLogic.swift */; };
 		3D9AEFE129AC71A90020DE63 /* RemotePickupPointDataLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9AEFE029AC71A90020DE63 /* RemotePickupPointDataLogic.swift */; };
@@ -51,6 +52,7 @@
 /* Begin PBXFileReference section */
 		3D3DF67D29AC5CA10041E470 /* PickupPointDataLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupPointDataLogic.swift; sourceTree = "<group>"; };
 		3D4511BC29AC996800CC3F97 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.2.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
+		3D4511BE29ACA7C300CC3F97 /* CLLocationCoordinate2D+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Equatable.swift"; sourceTree = "<group>"; };
 		3D99362D29A3988200094239 /* PickupPointMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupPointMap.swift; sourceTree = "<group>"; };
 		3D9AEFDE29AC715D0020DE63 /* GeocodingDataLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingDataLogic.swift; sourceTree = "<group>"; };
 		3D9AEFE029AC71A90020DE63 /* RemotePickupPointDataLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePickupPointDataLogic.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				3D9AEFE029AC71A90020DE63 /* RemotePickupPointDataLogic.swift */,
 				3DCE3D7629AB182800921835 /* VCCheckboxToggleStyle.swift */,
 				3D9AEFE429AC8D620020DE63 /* Loadable.swift */,
+				3D4511BE29ACA7C300CC3F97 /* CLLocationCoordinate2D+Equatable.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -324,6 +327,7 @@
 				3DC5E44129A9FF6E00D50204 /* PickupPointListContent.swift in Sources */,
 				3DFBC11929A4BA31008864EA /* AnyMapAnnotationProtocol.swift in Sources */,
 				3DE7928D297F7AEB00A101A0 /* MapApp.swift in Sources */,
+				3D4511BF29ACA7C300CC3F97 /* CLLocationCoordinate2D+Equatable.swift in Sources */,
 				3DF9A00C298BB78800CA243A /* PickupPoint.swift in Sources */,
 				3D99362E29A3988200094239 /* PickupPointMap.swift in Sources */,
 				3D9AEFE329AC82660020DE63 /* PickupPointPickerViewModel.swift in Sources */,

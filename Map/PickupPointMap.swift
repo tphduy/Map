@@ -11,23 +11,20 @@ import MapKit
 struct PickupPointMap: View {
     // MARK: States
 
+    @State var points: [PickupPoint] = []
+
+    @Binding var center: PickupPoint?
+
+    @Binding var selected: PickupPoint?
+
     /// A  rectangular geographic region that centers the map.
     ///
     /// The default value is Apple Park.
-    @State var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(
-            latitude: 37.334_900,
-            longitude: -122.009_020
-        ),
+    @State var region: MKCoordinateRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 37.334_900, longitude: -122.009_020),
         latitudinalMeters: 1200,
         longitudinalMeters: 1200
     )
-
-    var referencePoint: PickupPoint?
-
-    var points: [PickupPoint] = []
-
-    @Binding var selected: PickupPoint?
 
     // MARK: View
 
@@ -36,9 +33,13 @@ struct PickupPointMap: View {
             coordinateRegion: $region,
             showsUserLocation: false,
             userTrackingMode: .constant(.follow),
-            annotationItems: referenceAndNormalPoints(),
+            annotationItems: centerAndNormalPoints(),
             annotationContent: annotation(for:)
         )
+        .onChange(of: center) { newValue in
+            guard let center = newValue?.location.coordinate else { return }
+            region = MKCoordinateRegion(center: center, span: region.span)
+        }
     }
 
     // MARK: Utilities
@@ -56,11 +57,15 @@ struct PickupPointMap: View {
         isPointSelected(point) ? .green : .black
     }
 
-    func referenceAndNormalPoints() -> [PickupPoint] {
-        (referencePoint.map { [$0] } ?? []) + points
+    func centerAndNormalPoints() -> [PickupPoint] {
+        let centerLocation = PickupPoint.Location(
+            latitude: region.center.latitude,
+            longitude: region.center.longitude)
+        let centerPoint = PickupPoint(location: centerLocation)
+        return [centerPoint] + points
     }
 
-    func referenceAnnotation(at coordinate: CLLocationCoordinate2D) -> some MapAnnotationProtocol {
+    func centerAnnotation(at coordinate: CLLocationCoordinate2D) -> some MapAnnotationProtocol {
         MapMarker(coordinate: coordinate, tint: .red)
     }
 
@@ -79,12 +84,12 @@ struct PickupPointMap: View {
     }
 
     func annotation(for point: PickupPoint) -> some MapAnnotationProtocol {
-        let isReference = point == referencePoint
+        let isCenter = point == center
         let isSelected = isPointSelected(point)
         let coordinate = point.location.coordinate
-        switch (isReference, isSelected) {
+        switch (isCenter, isSelected) {
         case (true, _):
-            return AnyMapAnnotationProtocol(referenceAnnotation(at: coordinate))
+            return AnyMapAnnotationProtocol(centerAnnotation(at: coordinate))
         case (false, true):
             return AnyMapAnnotationProtocol(selectedAnnotation(at: coordinate))
         case (false, false):
@@ -96,11 +101,8 @@ struct PickupPointMap: View {
 struct CarrierMap_Previews: PreviewProvider {
     static var previews: some View {
         PickupPointMap(
-            referencePoint: .Preview.applePark,
-            points: [
-                .Preview.theDukeOfEdinburgh,
-                .Preview.wolfeLiquor
-            ],
+            points: [.Preview.theDukeOfEdinburgh, .Preview.wolfeLiquor],
+            center: .constant(.Preview.applePark),
             selected: .constant(.Preview.theDukeOfEdinburgh)
         )
     }

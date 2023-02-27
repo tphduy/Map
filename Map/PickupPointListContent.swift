@@ -10,7 +10,7 @@ import SwiftUI
 struct PickupPointListContent: View {
     // MARK: States
 
-    @State var points: [PickupPoint] = []
+    var points: [PickupPoint] = []
 
     @Binding var selected: PickupPoint?
 

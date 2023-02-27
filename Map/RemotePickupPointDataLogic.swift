@@ -44,7 +44,6 @@ struct RemotePickupPointDataLogic: RemotePickupPointDataLogicType {
             .dataTaskPublisher(for: request)
             .map(\.data)
             .decode(type: ResponseWrapper<[PickupPoint]>.self, decoder: JSONDecoder())
-            .print("Requested")
             .map(\.result)
             .eraseToAnyPublisher()
         return result

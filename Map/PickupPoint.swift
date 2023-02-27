@@ -20,6 +20,32 @@ struct PickupPoint: Codable, Hashable {
     let distance: Distance?
     let isLegacyPickup: Bool?
 
+    init(
+        address: String? = nil,
+        postcode: String? = nil,
+        name: String? = nil,
+        hasDisabledAccess: Bool? = nil,
+        city: String? = nil,
+        reference: String? = nil,
+        location: Location,
+        carrier: Carrier? = nil,
+        openingTimes: OpeningTimes? = nil,
+        distance: Distance? = nil,
+        isLegacyPickup: Bool? = nil
+    ) {
+        self.address = address
+        self.postcode = postcode
+        self.name = name
+        self.hasDisabledAccess = hasDisabledAccess
+        self.city = city
+        self.reference = reference
+        self.location = location
+        self.carrier = carrier
+        self.openingTimes = openingTimes
+        self.distance = distance
+        self.isLegacyPickup = isLegacyPickup
+    }
+
     struct Carrier: Codable, Hashable {
         let name: String?
         let iconURL: URL?
