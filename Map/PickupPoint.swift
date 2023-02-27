@@ -36,10 +36,10 @@ struct PickupPoint: Codable, Hashable {
     }
 
     struct Location: Codable, Hashable {
-        let latitude, longitude: Double
+        let latitude, longitude: Double?
 
         var coordinate: CLLocationCoordinate2D {
-            CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            CLLocationCoordinate2D(latitude: latitude ?? 0, longitude: longitude ?? 0)
         }
 
         enum CodingKeys: String, CodingKey {

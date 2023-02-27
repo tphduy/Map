@@ -19,15 +19,15 @@ struct PickupPointMap: View {
             latitude: 37.334_900,
             longitude: -122.009_020
         ),
-        latitudinalMeters: 750,
-        longitudinalMeters: 750
+        latitudinalMeters: 1200,
+        longitudinalMeters: 1200
     )
 
     var referencePoint: PickupPoint?
 
     var points: [PickupPoint] = []
 
-    @Binding var selectedIndexes: [Int]
+    @Binding var selected: PickupPoint?
 
     // MARK: View
 
@@ -49,10 +49,7 @@ struct PickupPointMap: View {
     }
 
     func isPointSelected(_ point: PickupPoint) -> Bool {
-        points
-            .firstIndex(of: point)
-            .map(selectedIndexes.contains(_:))
-        ?? false
+        point == selected
     }
 
     func tint(of point: PickupPoint) -> Color {
@@ -104,7 +101,7 @@ struct CarrierMap_Previews: PreviewProvider {
                 .Preview.theDukeOfEdinburgh,
                 .Preview.wolfeLiquor
             ],
-            selectedIndexes: .constant([1])
+            selected: .constant(.Preview.theDukeOfEdinburgh)
         )
     }
 }

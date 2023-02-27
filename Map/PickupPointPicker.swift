@@ -8,72 +8,64 @@
 import SwiftUI
 import MapKit
 
-/// A view that lets user pick an available pickup poitns on map or from a list.
+/// A view that lets users pick an available pickup poitn from a map or from a list.
 struct PickupPointPicker: View {
     // MARK: States
 
-    @State var referencePoint: PickupPoint?
-
-    @State var points: [PickupPoint] = []
-
-    @State var selectedIndexes: [Int] = []
-
-    @State var keywords = ""
+    @ObservedObject var viewModel = PickupPointPickerViewModel()
 
     /// An action that dismisses the current presentation
     @Environment(\.dismiss) var dismiss
 
-    @Environment(\.dismissSearch)
-    private var dismissSearch
-
     // MARK: View
 
     var body: some View {
-        List {
+        List(selection: $viewModel.selected) {
             Section {
-                list
+                listContent
             } header: {
                 map
             }
         }
         .listStyle(.plain)
         .navigationTitle("Choose a pick-up point")
-        .searchable(text: $keywords, prompt: "Address")
+        .searchable(text: $viewModel.keywords, prompt: "Address")
         .onSubmit(of: .search) {
-            dismissSearch()
+            viewModel.didSubmitSearch()
         }
     }
 
     var map: some View {
         PickupPointMap(
-            referencePoint: referencePoint,
-            points: points,
-            selectedIndexes: $selectedIndexes
+            referencePoint: viewModel.referencePoint,
+            points: viewModel.points,
+            selected: $viewModel.selected
         )
-        .listRowInsets(EdgeInsets())
         .scaledToFill()
+        .listRowInsets(EdgeInsets())
     }
 
-    var list: some View {
-        ForEach(points) { (deliveryHubs: PickupPoint) in
-            deliveryHubs.carrier?.name.map {
-                Text([$0, $0, $0, $0, $0, $0, $0, $0, $0].joined(separator: "\n"))
-            }
-        }
+    var listContent: some View {
+        PickupPointListContent(
+            points: viewModel.points,
+            selected: $viewModel.selected
+        )
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
+    private static var viewModel: PickupPointPickerViewModel {
+        let result = PickupPointPickerViewModel()
+        result.keywords = "Apple Park"
+        result.referencePoint = .Preview.applePark
+        result.selected = .Preview.theDukeOfEdinburgh
+        result.state = .loaded([.Preview.theDukeOfEdinburgh, .Preview.wolfeLiquor])
+        return result
+    }
+
     static var previews: some View {
         NavigationStack {
-            PickupPointPicker(
-                referencePoint: .Preview.applePark,
-                points: [
-                    .Preview.theDukeOfEdinburgh,
-                    .Preview.wolfeLiquor
-                ],
-                selectedIndexes: [1]
-            )
+            PickupPointPicker(viewModel: viewModel)
             .navigationBarTitleDisplayMode(.inline)
         }
     }
