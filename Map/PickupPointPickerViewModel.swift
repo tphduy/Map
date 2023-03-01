@@ -20,7 +20,7 @@ final class PickupPointPickerViewModel: ObservableObject {
 
     @Published var keywords: String = ""
 
-    @Published var state: Loadable<[PickupPoint], Error> = .isLoading(last: nil)
+    @Published var state: Loadable<[PickupPoint], Error> = .loaded([])
 
     // MARK: Dependencies
 
@@ -94,25 +94,6 @@ final class PickupPointPickerViewModel: ObservableObject {
                 self.state = .loaded(points)
             }
             .store(in: &cancellables)
-    }
-}
-
-extension PickupPointPickerViewModel {
-    
-    static var defaultCoordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: 37.334_900, longitude: -122.009_020)
-    }
-
-    static var defaultCoordinateMeters: Double {
-        1200
-    }
-
-    static var defaultRegion: MKCoordinateRegion {
-        MKCoordinateRegion(
-            center: defaultCoordinate,
-            latitudinalMeters: defaultCoordinateMeters,
-            longitudinalMeters: defaultCoordinateMeters
-        )
     }
 }
 

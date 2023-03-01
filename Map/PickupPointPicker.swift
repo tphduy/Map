@@ -31,16 +31,8 @@ struct PickupPointPicker: View {
         switch viewModel.state {
         case let .failed(error):
             Text(error.localizedDescription)
-        case .isLoading:
-            ProgressView()
-        case .loaded:
-            List(selection: $viewModel.selected) {
-                Section {
-                    listContent
-                } header: {
-                    map
-                }
-            }
+        case .isLoading, .loaded:
+            list
         }
     }
 
@@ -50,16 +42,40 @@ struct PickupPointPicker: View {
             center: $viewModel.center,
             selected: $viewModel.selected
         )
-        .scaledToFill()
+        .aspectRatio(193.0 / 123.0, contentMode: .fill)
         .listRowInsets(EdgeInsets())
     }
 
+    var progress: some View {
+        HStack {
+            Spacer()
+            ProgressView()
+                .progressViewStyle(.circular)
+            Spacer()
+        }
+        .listRowSeparator(.hidden)
+    }
+
+    @ViewBuilder
     var listContent: some View {
+        if case.isLoading = viewModel.state { progress }
         PickupPointListContent(
             points: viewModel.state.data ?? [],
             selected: $viewModel.selected
         )
     }
+
+    var list: some View {
+        List(selection: $viewModel.selected) {
+            Section {
+                listContent
+            } header: {
+                map
+            }
+        }
+    }
+
+    func submitButtonDidTap() {}
 }
 
 struct ContentView_Previews: PreviewProvider {

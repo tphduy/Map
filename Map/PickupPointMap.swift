@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import Combine
 
 struct PickupPointMap: View {
     // MARK: States
@@ -22,8 +23,8 @@ struct PickupPointMap: View {
     /// The default value is Apple Park.
     @State var region: MKCoordinateRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 37.334_900, longitude: -122.009_020),
-        latitudinalMeters: 1200,
-        longitudinalMeters: 1200
+        latitudinalMeters: 1800,
+        longitudinalMeters: 1800
     )
 
     // MARK: View
@@ -37,8 +38,11 @@ struct PickupPointMap: View {
             annotationContent: annotation(for:)
         )
         .onChange(of: center) { newValue in
-            guard let center = newValue?.location.coordinate else { return }
-            region = MKCoordinateRegion(center: center, span: region.span)
+            guard let newValue else { return }
+            region = MKCoordinateRegion(
+                center: newValue.location.coordinate,
+                span: region.span
+            )
         }
     }
 
@@ -58,11 +62,10 @@ struct PickupPointMap: View {
     }
 
     func centerAndNormalPoints() -> [PickupPoint] {
-        let centerLocation = PickupPoint.Location(
-            latitude: region.center.latitude,
-            longitude: region.center.longitude)
+        guard let centerLocation = center?.location else { return [] }
         let centerPoint = PickupPoint(location: centerLocation)
-        return [centerPoint] + points
+        let result = [centerPoint] + points
+        return result
     }
 
     func centerAnnotation(at coordinate: CLLocationCoordinate2D) -> some MapAnnotationProtocol {
