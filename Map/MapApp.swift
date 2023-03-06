@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct MapApp: App {
-
     var body: some Scene {
         WindowGroup {
             Text("Welcome")
@@ -19,7 +18,7 @@ struct MapApp: App {
 
     var pickupPointPicker: some View {
         NavigationStack {
-            PickupPointPicker()
+            PickupPointPicker(viewModel: PickupPointPickerViewModel(keywords: "13 Place Lachambeaudie, Paris, France"))
         }
     }
 }

@@ -11,12 +11,13 @@ import Contacts
 import CoreLocation
 import MapKit
 
+/// An object that manages the pickup-point data and exposes the publishers to displays a list of pickup points .
 final class PickupPointPickerViewModel: ObservableObject {
     // MARK: States
 
     @Published var center: PickupPoint?
 
-    @Published var selected: PickupPoint?
+    @Published var selected: PickupPoint.ID?
 
     @Published var keywords: String = ""
 
@@ -35,11 +36,14 @@ final class PickupPointPickerViewModel: ObservableObject {
     // MARK: Init
 
     init(
+        keywords: String = "",
         remotePickupPointDataLogic: RemotePickupPointDataLogicType = RemotePickupPointDataLogic(),
         geocodingDataLogic: GeocodingDataLogicType = GeocodingDataLogic()
     ) {
+        self.keywords = keywords
         self.remotePickupPointDataLogic = remotePickupPointDataLogic
         self.geocodingDataLogic = geocodingDataLogic
+        self.performInitialSearchIfNeeded()
     }
 
     // MARK: State Changes
@@ -50,8 +54,15 @@ final class PickupPointPickerViewModel: ObservableObject {
         selected = nil
         state = .isLoading(last: state.data)
         let geocoding = geocodingDataLogic.geocode(address: keywords).share()
-        updateReferencePoint(to: geocoding)
+        updateCenterPoint(to: geocoding)
         updatePickupPoints(to: geocoding)
+    }
+
+    func didTapSubmitButton() {}
+
+    private func performInitialSearchIfNeeded() {
+        guard state.data?.isEmpty ?? true else { return }
+        didSubmitSearch()
     }
 
     private func resetData() {
@@ -60,13 +71,14 @@ final class PickupPointPickerViewModel: ObservableObject {
         state = .loaded([])
     }
 
-    private func updateReferencePoint(to geocoding: Publishers.Share<AnyPublisher<CLPlacemark, Error>>) {
+    private func updateCenterPoint(to geocoding: Publishers.Share<AnyPublisher<CLPlacemark, Error>>) {
         geocoding
             .receive(on: RunLoop.main)
-            .sink { (completion) in
-                guard case .failure = completion else { return }
+            .sink { [weak self] (completion) in
+                guard let self, case .failure = completion else { return }
                 self.resetData()
-            } receiveValue: { (placemark: CLPlacemark) in
+            } receiveValue: { [weak self] (placemark: CLPlacemark) in
+                guard let self else { return }
                 guard let coordinate = placemark.location?.coordinate else { return self.resetData() }
                 let location = PickupPoint.Location(latitude: coordinate.latitude, longitude: coordinate.longitude)
                 self.center = PickupPoint(location: location)
@@ -87,8 +99,8 @@ final class PickupPointPickerViewModel: ObservableObject {
                 )
             }
             .receive(on: RunLoop.main)
-            .sink { (completion) in
-                guard case let .failure(error) = completion else { return }
+            .sink { [weak self] (completion) in
+                guard let self, case let .failure(error) = completion else { return }
                 self.state = .failed(error)
             } receiveValue: { (points: [PickupPoint]) in
                 self.state = .loaded(points)
@@ -102,7 +114,7 @@ extension PickupPointPickerViewModel {
     static var preview: PickupPointPickerViewModel {
         let result = PickupPointPickerViewModel()
         result.center = .Preview.applePark
-        result.selected = .Preview.theDukeOfEdinburgh
+        result.selected = PickupPoint.Preview.theDukeOfEdinburgh.id
         result.keywords = "Apple park"
         result.state = .loaded([.Preview.theDukeOfEdinburgh, .Preview.wolfeLiquor])
         return result

@@ -69,14 +69,19 @@ struct PickupPoint: Codable, Hashable {
         }
 
         enum CodingKeys: String, CodingKey {
-            case latitude
+            case latitude = "lat"
             case longitude = "lng"
         }
     }
 
     struct OpeningTimes: Codable, Hashable {
-        let saturday, monday, friday, tuesday: String?
-        let wednesday, thursday, sunday: String?
+        let monday: String?
+        let friday: String?
+        let sunday: String?
+        let tuesday: String?
+        let thursday: String?
+        let wednesday: String?
+        let saturday: String?
     }
 }
 
@@ -102,7 +107,14 @@ extension  PickupPoint {
                 carrier: Carrier(
                     name: "Apple",
                     iconURL: URL(string: "https://cdn-icons-png.flaticon.com/512/0/747.png")),
-                openingTimes: nil,
+                openingTimes: OpeningTimes(
+                    monday: "09:00 - 19:00",
+                    friday: "09:00 - 19:00",
+                    sunday: "09:00 - 19:00",
+                    tuesday: "09:00 - 19:00",
+                    thursday: "09:00 - 19:00",
+                    wednesday: "09:00 - 19:00",
+                    saturday: "09:00 - 19:00"),
                 distance: nil,
                 isLegacyPickup: nil)
         }
@@ -121,7 +133,14 @@ extension  PickupPoint {
                 carrier: Carrier(
                     name: "The Duke of Edinburgh",
                     iconURL: URL(string: "https://cdn-icons-png.flaticon.com/512/0/747.png")),
-                openingTimes: nil,
+                openingTimes: OpeningTimes(
+                    monday: "09:00 - 19:00",
+                    friday: "09:00 - 19:00",
+                    sunday: "09:00 - 19:00",
+                    tuesday: "09:00 - 19:00",
+                    thursday: "09:00 - 19:00",
+                    wednesday: "09:00 - 19:00",
+                    saturday: "09:00 - 19:00"),
                 distance: nil,
                 isLegacyPickup: nil)
         }
@@ -140,7 +159,14 @@ extension  PickupPoint {
                 carrier: Carrier(
                     name: "Wolfe Liquor",
                     iconURL: URL(string: "https://cdn-icons-png.flaticon.com/512/0/747.png")),
-                openingTimes: nil,
+                openingTimes: OpeningTimes(
+                    monday: "09:00 - 19:00",
+                    friday: "09:00 - 19:00",
+                    sunday: "09:00 - 19:00",
+                    tuesday: "09:00 - 19:00",
+                    thursday: "09:00 - 19:00",
+                    wednesday: "09:00 - 19:00",
+                    saturday: "09:00 - 19:00"),
                 distance: nil,
                 isLegacyPickup: nil)
         }

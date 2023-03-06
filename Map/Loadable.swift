@@ -18,16 +18,21 @@ enum Loadable<Data, Failure> where Failure: Error {
 
     var data: Data? {
         switch self {
-        case .isLoading(let data): return data
-        case .loaded(let data): return data
-        case .failed: return nil
+        case .isLoading(let data):
+            return data
+        case .loaded(let data):
+            return data
+        case .failed:
+            return nil
         }
     }
 
     var error: Error? {
         switch self {
-        case .isLoading, .loaded: return nil
-        case .failed(let error): return error
+        case .isLoading, .loaded:
+            return nil
+        case .failed(let error):
+            return error
         }
     }
 }
