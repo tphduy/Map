@@ -18,48 +18,86 @@ struct PickupPointPicker: View {
     // MARK: View
 
     var body: some View {
+        VStack {
+            list
+            confirmButton
+        }
+        .listStyle(.plain)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Choose a pick-up point")
+    }
+
+    var list: some View {
         ScrollViewReader { (proxy) in
-            List(selection: $viewModel.selected) {
+            List {
+                searchBar
                 Section {
                     listContent
                 } header: {
                     map
                 }
             }
+            .background(Color(.systemGroupedBackground))
             .onReceive(viewModel.$selected) { (selected) in
-                proxy.scrollTo(selected)
+                guard let selected else { return }
+                withAnimation {
+                    proxy.scrollTo(selected)
+                }
             }
-        }
-        .listStyle(.plain)
-        .navigationTitle("Choose a pick-up point")
-        .searchable(text: $viewModel.keywords, prompt: "Address")
-        .onSubmit(of: .search) {
-            viewModel.didSubmitSearch()
         }
     }
 
     @ViewBuilder
     var listContent: some View {
-        switch viewModel.state {
-        case .isLoading:
-            progress
-            rows
-        case .loaded(let data) where data.isEmpty:
-            empty
-        case .loaded:
-            rows
-        case .failed:
-            failure
+        if #available(iOS 15.0, *) {
+            switch viewModel.state {
+            case .loaded(let data) where data.isEmpty:
+                empty
+                    .listRowSeparator(.hidden)
+            case .isLoading, .loaded:
+                rows
+                    .listRowSeparator(.hidden)
+            case .failed:
+                failure
+                    .listRowSeparator(.hidden)
+            }
+        } else {
+            switch viewModel.state {
+            case .isLoading:
+                progress
+                rows
+            case .loaded(let data) where data.isEmpty:
+                empty
+            case .loaded:
+                rows
+            case .failed:
+                failure
+            }
         }
     }
 
+    var searchBar: some View {
+        VStack(alignment: .leading) {
+            Text("Showing pick-up points near:")
+            SearchBar(text: $viewModel.keywords)
+        }
+        .background(Color(.systemBackground))
+        .listRowBackground(Color(.systemBackground))
+    }
+
     var map: some View {
-        PickupPointMap(
-            points: viewModel.state.data ?? [],
-            center: $viewModel.center,
-            selected: $viewModel.selected
-        )
-        .aspectRatio(193.0 / 123.0, contentMode: .fill)
+        ZStack(alignment: .center) {
+            PickupPointMap(
+                points: viewModel.state.data ?? [],
+                center: $viewModel.center,
+                selected: $viewModel.selected
+            )
+            .aspectRatio(193.0 / 123.0, contentMode: .fill)
+
+            if case .isLoading = viewModel.state {
+                ProgressView()
+            }
+        }
         .listRowInsets(EdgeInsets())
     }
 
@@ -67,25 +105,56 @@ struct PickupPointPicker: View {
         HStack {
             Spacer()
             ProgressView()
-                .progressViewStyle(.circular)
             Spacer()
         }
-        .listRowSeparator(.hidden)
     }
 
     var empty: some View {
         Text("There are no available pickup-points around your address.")
-            .listRowSeparator(.hidden)
+            .multilineTextAlignment(.center)
     }
 
     var failure: some View {
-        Text("Something went wrong, please try again by pulling to refresh.")
+        VStack(spacing: 8) {
+            Text("Something went wrong, please try again by pulling to refresh.")
+                .multilineTextAlignment(.center)
+            Button(action: viewModel.didRefresh) {
+                Text("Refresh")
+                    .padding(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .cornerRadius(4)
+            }
+        }
     }
 
     var rows: some View {
         ForEach(viewModel.state.data ?? []) { (point) in
-            PickupPointRow(point: point)
+            PickupPointRow(point: point, selected: $viewModel.selected)
                 .id(point.id)
+                .padding()
+                .background(Color(.systemBackground))
+                .listRowBackground(Color.clear)
+                .onTapGesture {
+                    viewModel.selected = point.id
+                }
+        }
+    }
+
+    @ViewBuilder
+    var confirmButton: some View {
+        if case let .loaded(data) = viewModel.state, !data.isEmpty {
+            Button(action: viewModel.didTapConfirmButton) {
+                Text("Confirm")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(viewModel.selected == nil ? Color.gray : Color.black)
+                    .cornerRadius(2)
+                    .font(.headline)
+            }
+            .padding()
+            .disabled(viewModel.selected == nil)
         }
     }
 }
@@ -93,49 +162,88 @@ struct PickupPointPicker: View {
 struct ContentView_Previews: PreviewProvider {
     // MARK: Preview
 
+    static var loaded: some View {
+        Group {
+            if #available(iOS 16.0, *) {
+                NavigationStack {
+                    PickupPointPicker(viewModel: .preview)
+                }
+            } else {
+                NavigationView {
+                    PickupPointPicker(viewModel: .preview)
+                }
+            }
+        }
+        .previewDisplayName("Loaded")
+    }
+
+    static var empty: some View {
+        Group {
+            if #available(iOS 16.0, *) {
+                NavigationStack {
+                    PickupPointPicker(viewModel: .empty)
+                }
+            } else {
+                NavigationView {
+                    PickupPointPicker(viewModel: .empty)
+                }
+            }
+        }
+        .previewDisplayName("Empty")
+    }
+
+    static var inProgressWithoutData: some View {
+        Group {
+            if #available(iOS 16.0, *) {
+                NavigationStack {
+                    PickupPointPicker(viewModel: .inProgressWithoutData)
+                }
+            } else {
+                NavigationView {
+                    PickupPointPicker(viewModel: .inProgressWithoutData)
+                }
+            }
+        }
+        .previewDisplayName("In Progress Without Data")
+    }
+
+    static var inProgressWithSomeData: some View {
+        Group {
+            if #available(iOS 16.0, *) {
+                NavigationStack {
+                    PickupPointPicker(viewModel: .inProgressWithData)
+                }
+            } else {
+                NavigationView {
+                    PickupPointPicker(viewModel: .inProgressWithData)
+                }
+            }
+        }
+        .previewDisplayName("In Progress With Some Data")
+    }
+
+    static var failure: some View {
+        Group {
+            if #available(iOS 16.0, *) {
+                NavigationStack {
+                    PickupPointPicker(viewModel: .failure)
+                }
+            } else {
+                NavigationView {
+                    PickupPointPicker(viewModel: .failure)
+                }
+            }
+        }
+        .previewDisplayName("Failure")
+    }
+
     static var previews: some View {
         Group {
-            NavigationStack {
-                PickupPointPicker(viewModel: .preview)
-                    .navigationBarTitleDisplayMode(.inline)
-            }
-            .previewDisplayName("Loaded With Some Data")
-
-            NavigationStack {
-                PickupPointPicker(viewModel: {
-                    let result = PickupPointPickerViewModel()
-                    result.center = .Preview.applePark
-                    result.keywords = "Apple park"
-                    result.state = .loaded([])
-                    return result
-                }())
-                .navigationBarTitleDisplayMode(.inline)
-            }
-            .previewDisplayName("Loaded Without Data")
-
-            NavigationStack {
-                PickupPointPicker(viewModel: {
-                    let result = PickupPointPickerViewModel()
-                    result.center = .Preview.applePark
-                    result.keywords = "Apple park"
-                    result.state = .isLoading(last: nil)
-                    return result
-                }())
-                .navigationBarTitleDisplayMode(.inline)
-            }
-            .previewDisplayName("Is Loading Without Data")
-
-            NavigationStack {
-                PickupPointPicker(viewModel: {
-                    let result = PickupPointPickerViewModel()
-                    result.center = .Preview.applePark
-                    result.keywords = "Apple park"
-                    result.state = .isLoading(last: [.Preview.theDukeOfEdinburgh, .Preview.wolfeLiquor])
-                    return result
-                }())
-                .navigationBarTitleDisplayMode(.inline)
-            }
-            .previewDisplayName("Is Loading With Some Data")
+            loaded
+            empty
+            inProgressWithoutData
+            inProgressWithSomeData
+            failure
         }
     }
 }

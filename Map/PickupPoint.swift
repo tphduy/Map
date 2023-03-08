@@ -115,7 +115,7 @@ extension  PickupPoint {
                     thursday: "09:00 - 19:00",
                     wednesday: "09:00 - 19:00",
                     saturday: "09:00 - 19:00"),
-                distance: nil,
+                distance: Distance(formatted: "2m", meters: 2),
                 isLegacyPickup: nil)
         }
 
@@ -141,7 +141,7 @@ extension  PickupPoint {
                     thursday: "09:00 - 19:00",
                     wednesday: "09:00 - 19:00",
                     saturday: "09:00 - 19:00"),
-                distance: nil,
+                distance: Distance(formatted: "3m", meters: 3),
                 isLegacyPickup: nil)
         }
 
@@ -167,7 +167,7 @@ extension  PickupPoint {
                     thursday: "09:00 - 19:00",
                     wednesday: "09:00 - 19:00",
                     saturday: "09:00 - 19:00"),
-                distance: nil,
+                distance: Distance(formatted: "5m", meters: 5),
                 isLegacyPickup: nil)
         }
     }

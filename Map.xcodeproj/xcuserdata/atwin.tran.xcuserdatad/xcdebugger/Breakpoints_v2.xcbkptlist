@@ -7,17 +7,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4A7B3E80-B20C-4013-AE51-B884B7C542E3"
+            uuid = "42CADB02-9A1A-4A48-BC1C-31B420B11A7D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Map/PickupPointPicker.swift"
+            filePath = "Map/PickupPointPickerViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "78"
+            endingLineNumber = "78"
+            landmarkName = "sinkToKeywords()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -13,7 +13,7 @@ struct OpeningHours: View {
     /// A list those element is a tuple of a weekday and the description.
     ///
     /// Because opening hourse respect the order of the element so we can't use a dictionary.
-    @State var openingHourPerWeekday = [(weekday: String, description: String)]()
+    let openingHourPerWeekday: [(weekday: String, description: String)]
 
     // MARK: View
 

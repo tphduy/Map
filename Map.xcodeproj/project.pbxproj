@@ -10,6 +10,7 @@
 		3D3DF67E29AC5CA10041E470 /* PickupPointDataLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3DF67D29AC5CA10041E470 /* PickupPointDataLogic.swift */; };
 		3D4511BD29AC996800CC3F97 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D4511BC29AC996800CC3F97 /* CoreLocation.framework */; };
 		3D4511BF29ACA7C300CC3F97 /* CLLocationCoordinate2D+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4511BE29ACA7C300CC3F97 /* CLLocationCoordinate2D+Equatable.swift */; };
+		3D6E6BEE29B71DBD00BEE111 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6E6BED29B71DBD00BEE111 /* SearchBar.swift */; };
 		3D99362E29A3988200094239 /* PickupPointMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D99362D29A3988200094239 /* PickupPointMap.swift */; };
 		3D9AEFDF29AC715D0020DE63 /* GeocodingDataLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9AEFDE29AC715D0020DE63 /* GeocodingDataLogic.swift */; };
 		3D9AEFE129AC71A90020DE63 /* RemotePickupPointDataLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9AEFE029AC71A90020DE63 /* RemotePickupPointDataLogic.swift */; };
@@ -53,6 +54,7 @@
 		3D3DF67D29AC5CA10041E470 /* PickupPointDataLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupPointDataLogic.swift; sourceTree = "<group>"; };
 		3D4511BC29AC996800CC3F97 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.2.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
 		3D4511BE29ACA7C300CC3F97 /* CLLocationCoordinate2D+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Equatable.swift"; sourceTree = "<group>"; };
+		3D6E6BED29B71DBD00BEE111 /* SearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		3D99362D29A3988200094239 /* PickupPointMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupPointMap.swift; sourceTree = "<group>"; };
 		3D9AEFDE29AC715D0020DE63 /* GeocodingDataLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingDataLogic.swift; sourceTree = "<group>"; };
 		3D9AEFE029AC71A90020DE63 /* RemotePickupPointDataLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePickupPointDataLogic.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 		3DE7928B297F7AEB00A101A0 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				3D6E6BED29B71DBD00BEE111 /* SearchBar.swift */,
 				3DFBC11829A4BA31008864EA /* AnyMapAnnotationProtocol.swift */,
 				3DE79290297F7AEC00A101A0 /* Assets.xcassets */,
 				3D4511BE29ACA7C300CC3F97 /* CLLocationCoordinate2D+Equatable.swift */,
@@ -336,6 +339,7 @@
 				3D9AEFE129AC71A90020DE63 /* RemotePickupPointDataLogic.swift in Sources */,
 				3DC5CC9729B0905500259C01 /* OpeningHours.swift in Sources */,
 				3DCE3D7729AB182800921835 /* VCCheckboxToggleStyle.swift in Sources */,
+				3D6E6BEE29B71DBD00BEE111 /* SearchBar.swift in Sources */,
 				3D9AEFE529AC8D620020DE63 /* Loadable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -506,7 +510,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
@@ -545,7 +549,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
