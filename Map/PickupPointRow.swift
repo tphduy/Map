@@ -46,7 +46,7 @@ struct PickupPointRow: View {
 
     @ViewBuilder
     var distanceAndOpeningHour: some View {
-        let resutl = DisclosureGroup(isExpanded: $isOpeningHourExpanded) {
+        let result = DisclosureGroup(isExpanded: $isOpeningHourExpanded) {
             OpeningHours(openingHourPerWeekday: openingHourPerWeekday)
         } label: {
             Group {
@@ -61,9 +61,7 @@ struct PickupPointRow: View {
         }
 
         if #available(iOS 15.0, *) {
-            resutl.tint(.black)
-        } else {
-            // Fallback on earlier versions
+            result.tint(.black)
         }
     }
 

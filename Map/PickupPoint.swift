@@ -13,7 +13,7 @@ struct PickupPoint: Codable, Hashable {
     let name: String?
     let hasDisabledAccess: Bool?
     let city: String?
-    let reference: String?
+    let reference: String
     let location: Location
     let carrier: Carrier?
     let openingTimes: OpeningTimes?
@@ -26,7 +26,7 @@ struct PickupPoint: Codable, Hashable {
         name: String? = nil,
         hasDisabledAccess: Bool? = nil,
         city: String? = nil,
-        reference: String? = nil,
+        reference: String = "",
         location: Location,
         carrier: Carrier? = nil,
         openingTimes: OpeningTimes? = nil,
@@ -86,8 +86,8 @@ struct PickupPoint: Codable, Hashable {
 }
 
 extension PickupPoint: Identifiable {
-    var id: Int {
-        hashValue
+    var id: String {
+        reference
     }
 }
 
@@ -100,7 +100,7 @@ extension  PickupPoint {
                 name: "Apple Park",
                 hasDisabledAccess: nil,
                 city: "Cupertino",
-                reference: nil,
+                reference: "One Apple Park Way, Cupertino, CA 95014, United States",
                 location: Location(
                     latitude: 37.334_900,
                     longitude: -122.009_020),
@@ -126,7 +126,7 @@ extension  PickupPoint {
                 name: "The Duke of Edinburgh",
                 hasDisabledAccess: nil,
                 city: "Cupertino",
-                reference: nil,
+                reference: "10801 N Wolfe Rd, Cupertino, CA 95014, United States",
                 location: Location(
                     latitude: 37.334944,
                     longitude: -122.014694),
@@ -152,7 +152,7 @@ extension  PickupPoint {
                 name: "Wolfe Liquor",
                 hasDisabledAccess: nil,
                 city: "Cupertino",
-                reference: nil,
+                reference: "1689 S Wolfe Rd, Sunnyvale, CA 94087, United States",
                 location: Location(
                     latitude: 37.338337,
                     longitude: -122.014590),
