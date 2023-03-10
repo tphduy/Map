@@ -7,6 +7,7 @@
 
 import MapKit
 
+/// An object that abstract a pickup point.
 struct PickupPoint: Codable, Hashable {
     let address: String?
     let postcode: String?

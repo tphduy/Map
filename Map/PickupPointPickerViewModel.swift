@@ -11,6 +11,12 @@ import Contacts
 import CoreLocation
 import MapKit
 
+/// An object that manages the interactions with the pickup-point picker.
+protocol PickupPointPickerDelegate: AnyObject {
+    /// Notifies that a selected point was confirmmed.
+    func didConfirmToSelectedPoint()
+}
+
 /// An object that manages the pickup-point data and exposes the publishers to displays a list of pickup points .
 final class PickupPointPickerViewModel: ObservableObject {
     // MARK: States
@@ -72,6 +78,9 @@ final class PickupPointPickerViewModel: ObservableObject {
 
     /// An object provides methods for interacting with geographic coordinates and place names.
     private let geocodingDataLogic: GeocodingDataLogicType
+
+    /// An object that manages the interactions.
+    weak var delegate: PickupPointPickerDelegate?
 
     // MARK: Misc
 
@@ -199,7 +208,7 @@ final class PickupPointPickerViewModel: ObservableObject {
         guard shouldSubmitSelectedPoint() else { return }
         // Verifies there is a selected pickup point.
         guard let selected else { return }
-        // Toggles loading state.
+        // Shows loading.
         submittingSelectedPoint = .isLoading(last: nil)
         // Submits the selected point.
         remotePickupPointDataLogic
@@ -211,7 +220,10 @@ final class PickupPointPickerViewModel: ObservableObject {
                 self.submittingSelectedPoint = .failed(error)
             } receiveValue: { [weak self] (_) in
                 guard let self else { return }
+                // Hides loading
                 self.submittingSelectedPoint = .loaded(())
+                // Notifies the delegate about this event.
+                self.delegate?.didConfirmToSelectedPoint()
             }
             .store(in: &cancellables)
     }
