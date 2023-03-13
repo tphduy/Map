@@ -134,7 +134,6 @@
 		3DE7928B297F7AEB00A101A0 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				3D6E6BED29B71DBD00BEE111 /* SearchBar.swift */,
 				3DFBC11829A4BA31008864EA /* AnyMapAnnotationProtocol.swift */,
 				3DE79290297F7AEC00A101A0 /* Assets.xcassets */,
 				3D9AEFDE29AC715D0020DE63 /* GeocodingDataLogic.swift */,
@@ -152,6 +151,7 @@
 				3DC5E44229AA02C300D50204 /* PickupPointRow.swift */,
 				3DE79293297F7AEC00A101A0 /* Preview Content */,
 				3D9AEFE029AC71A90020DE63 /* RemotePickupPointDataLogic.swift */,
+				3D6E6BED29B71DBD00BEE111 /* SearchBar.swift */,
 				3DCE3D7629AB182800921835 /* VCCheckboxToggleStyle.swift */,
 			);
 			path = Map;
