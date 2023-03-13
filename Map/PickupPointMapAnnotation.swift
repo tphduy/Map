@@ -7,7 +7,10 @@
 
 import SwiftUI
 
+/// A customizable annotation that marks a pickup point location.
 struct PickupPointMapAnnotation: View {
+    // MARK: View
+    
     var body: some View {
         VStack(spacing: 0) {
               Image(systemName: "mappin.circle.fill")

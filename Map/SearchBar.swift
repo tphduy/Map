@@ -7,21 +7,19 @@
 
 import SwiftUI
 
+/// A specialized view for receiving search-related information from the user.
 struct SearchBar: View {
 
+    /// The text to display and edit in the search field.
     @Binding var text: String
 
+    /// The key for the localized title of the text field, describing its purpose.
+    ///
+    /// The default value is `Search`.
+    @State var title: LocalizedStringKey = "Search"
+
+    /// A flag that indicates the user is editing the search field.
     @State var isEditing: Bool = false
-
-    let title: LocalizedStringKey
-
-    init(
-        _ title: LocalizedStringKey = "Search",
-        text: Binding<String>
-    ) {
-        self.title = title
-        self._text = text
-    }
 
     // MARK: View
 
@@ -34,15 +32,22 @@ struct SearchBar: View {
             }
 
             if isEditing || !text.isEmpty {
-                Button(action: clear) {
-                    Image(systemName: "xmark.circle.fill")
-                }
+                clearButton
             }
         }
         .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
         .background(Color(.systemGray6))
         .cornerRadius(8)
     }
+
+    /// A button that lets the user clear all of the text in a text field.
+    var clearButton: some View {
+        Button(action: clear) {
+            Image(systemName: "xmark.circle.fill")
+        }
+    }
+
+    // MARK: State Changes
 
     /// Clears all of the text in a text field.
     func clear() {

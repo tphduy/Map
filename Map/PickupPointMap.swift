@@ -103,7 +103,6 @@ struct PickupPointMap: View {
 
     func focus(to point: PickupPoint, animated: Bool = true) {
         let center = point.location.coordinate
-        guard region.center != center else { return }
         let task = { region = MKCoordinateRegion(center: center, span: region.span) }
         animated ? withAnimation(.default, task) : task()
     }

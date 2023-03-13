@@ -7,7 +7,10 @@
 
 import SwiftUI
 
+/// A custom appearance and behavior of a toggle following Vestiaire Collective's design system.
 struct VCCheckboxToggleStyle: ToggleStyle {
+    // MARK: ToggleStyle
+    
     func makeBody(configuration: Configuration) -> some View {
         Button {
             configuration.isOn.toggle()
