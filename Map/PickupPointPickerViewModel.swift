@@ -89,7 +89,7 @@ final class PickupPointPickerViewModel: ObservableObject {
 
     // MARK: Init
 
-    /// Initiate an object that manages the pickup-point data and exposes the publishers to displays a list of pickup points .
+    /// Initiate an object that manages the pickup-point data and exposes the publishers to display a list of pickup points.
     /// - Parameters:
     ///   - keywords: A place name to perform the initial searching. The default value is an empty string.
     ///   - remotePickupPointDataLogic: An object provides methods for interacting with the pickup-point data in the remote database.
@@ -103,7 +103,7 @@ final class PickupPointPickerViewModel: ObservableObject {
         self.remotePickupPointDataLogic = remotePickupPointDataLogic
         self.geocodingDataLogic = geocodingDataLogic
         self.sinkToKeywords()
-        // Calls API immediately if needed, if lets the initial search happens in `sinkToKeywords` the operation will be dalayed because of `debounce`.
+        // Calls API immediately if needed, if the initial search happens in `sinkToKeywords` the operation will be delayed because of `debounce`.
         self.performInitialSearchIfNeeded()
     }
 
@@ -193,6 +193,7 @@ final class PickupPointPickerViewModel: ObservableObject {
                 )
             }
             .receive(on: DispatchQueue.main)
+            .print("FOOOOOOOOOOOO")
             .sink { [weak self] (completion) in
                 guard let self, case let .failure(error) = completion else { return }
                 self.points = .failed(error)

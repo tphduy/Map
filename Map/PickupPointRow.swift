@@ -8,24 +8,30 @@
 import SwiftUI
 import Kingfisher
 
+/// A view that displays a pickup point as a row in a list.
 struct PickupPointRow: View {
     // MARK: States
 
+    /// A prearranged place where you go to collect things.
     let point: PickupPoint
 
+    /// A unique identifier of a pickup point that is selected.
+    @Binding var selected: PickupPoint.ID?
+
+    /// A flag indicates whether the current pickup point is selected.
     @State var isSelected: Bool = false
 
+    /// A flag indicates whether the opening hour group is expanded.
     @State var isOpeningHourExpanded: Bool = false
-
-    @Binding var selected: PickupPoint.ID?
 
     // MARK: View
 
     var body: some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .top, spacing: 8) {
             Toggle("", isOn: $isSelected)
                 .toggleStyle(VCCheckboxToggleStyle())
-                .foregroundColor(.black)
+                .disabled(true)
+            
             VStack(alignment: .leading) {
                 KFImage(point.carrier?.iconURL)
                     .resizable()
@@ -35,33 +41,35 @@ struct PickupPointRow: View {
                 point.address.map { Text($0) }
                 distanceAndOpeningHour
             }
+
+            Spacer()
         }
         .onAppear {
             invalidateIsSelected(selected)
         }
-        .onChange(of: selected) { newValue in
+        .onChange(of: selected) { (newValue) in
             invalidateIsSelected(newValue)
         }
     }
 
-    @ViewBuilder
-    var distanceAndOpeningHour: some View {
-        let result = DisclosureGroup(isExpanded: $isOpeningHourExpanded) {
-            OpeningHours(openingHourPerWeekday: openingHourPerWeekday)
-        } label: {
-            Group {
-                Text(point.distance?.formatted ?? "Not determined")
-                Text("-")
-                Text(isOpeningHourExpanded ? "Hide working hours" : "Show working hours")
-                    .underline()
-            }
-            .onTapGesture {
-                isOpeningHourExpanded.toggle()
-            }
+    /// A view that displays the distance from the current pickup point to a reference location and the opening hours.
+    ///
+    ///  Selection on this view will toggle the opening hour expanded or collapsed.
+    ///
+    /// Can not use `DisclosureGroup` because it use right chevron instead of down cheveron as design.
+    @ViewBuilder var distanceAndOpeningHour: some View {
+        HStack {
+            Text(point.distance?.formatted ?? "Not determined")
+            Text("-")
+            Text(isOpeningHourExpanded ? "Hide working hours" : "Show working hours")
+                .underline()
+            Image(systemName: isOpeningHourExpanded ? "chevron.up" : "chevron.down")
         }
-
-        if #available(iOS 15.0, *) {
-            result.tint(.black)
+        .onTapGesture {
+            isOpeningHourExpanded.toggle()
+        }
+        if isOpeningHourExpanded {
+            OpeningHours(openingHourPerWeekday: openingHourPerWeekday)
         }
     }
 
@@ -78,6 +86,7 @@ struct PickupPointRow: View {
 
     // MARK: Utilities
 
+    /// A list those element is a tuple of a weekday and the description.
     private var openingHourPerWeekday: [(weekday: String, description: String)] {
         [
             ("Monday", point.openingTimes?.monday ?? "Closed"),
@@ -93,7 +102,10 @@ struct PickupPointRow: View {
 
 struct PickupPointRow_Previews: PreviewProvider {
     static var previews: some View {
-        List([PickupPoint.Preview.applePark, PickupPoint.Preview.theDukeOfEdinburgh]) { (point) in
+        List([
+            PickupPoint.Preview.applePark,
+            PickupPoint.Preview.theDukeOfEdinburgh
+        ]) { (point) in
             PickupPointRow(
                 point: point,
                 selected: .constant(PickupPoint.Preview.applePark.id)

@@ -19,26 +19,27 @@ struct PickupPointPicker: View {
 
     var body: some View {
         VStack {
-            list
+            content
             confirmButton
         }
-        .listStyle(.plain)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Choose a pick-up point")
-        .alert(isPresented: $viewModel.isAlertPresented, content: alert)
+        .alert(isPresented: $viewModel.isAlertPresented, content: confirmationFailureAlert)
     }
 
-    var list: some View {
+    /// The main content that reflects the current state..
+    var content: some View {
         ScrollViewReader { (proxy) in
-            List {
-                searchBar
-                Section {
-                    listContent
-                } header: {
-                    map
+            // `ScrollView` instead of `List` because there is no way to manage the seperators and insets between items on iOS 14.
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 0, pinnedViews: .sectionHeaders) {
+                    Section(content: EmptyView.init, header: searchBar)
+                    Section(content: list, header: map)
                 }
+                .background(Color.clear)
             }
-            .background(Color(.systemGroupedBackground))
+            .foregroundColor(.black)
+            .background(Color(.systemGray6))
             .onReceive(viewModel.$selected) { (selected) in
                 guard let selected else { return }
                 withAnimation {
@@ -48,21 +49,9 @@ struct PickupPointPicker: View {
         }
     }
 
-    @ViewBuilder
-    var listContent: some View {
-        if #available(iOS 15.0, *) {
-            switch viewModel.points {
-            case .loaded(let data) where data.isEmpty:
-                empty
-                    .listRowSeparator(.hidden)
-            case .isLoading, .loaded:
-                rows
-                    .listRowSeparator(.hidden)
-            case .failed:
-                failure
-                    .listRowSeparator(.hidden)
-            }
-        } else {
+    /// A list of pickup points that reflects the current state.
+    @ViewBuilder func list() -> some View {
+        Group {
             switch viewModel.points {
             case .isLoading:
                 progress
@@ -75,46 +64,46 @@ struct PickupPointPicker: View {
                 failure
             }
         }
+        .padding(EdgeInsets(top: 12, leading: 16, bottom: 0, trailing: 16))
     }
 
-    var searchBar: some View {
+    /// A custom search bar that lets user input a place name.
+    func searchBar() -> some View {
         VStack(alignment: .leading) {
             Text("Showing pick-up points near:")
             SearchBar(text: $viewModel.keywords)
         }
+        .padding(EdgeInsets(top: 16, leading: 16, bottom: 10, trailing: 16))
         .background(Color(.systemBackground))
-        .listRowBackground(Color(.systemBackground))
     }
 
-    var map: some View {
-        ZStack(alignment: .center) {
-            PickupPointMap(
-                points: viewModel.points.data ?? [],
-                center: $viewModel.center,
-                selected: $viewModel.selected
-            )
-            .aspectRatio(193.0 / 123.0, contentMode: .fill)
+    /// A that displays the pickup points on a map with selection.
+    func map() -> some View {
+        PickupPointMap(
+            points: viewModel.points.data ?? [],
+            center: $viewModel.center,
+            selected: $viewModel.selected
+        )
+        .aspectRatio(193.0 / 123.0, contentMode: .fill)    }
 
-            if case .isLoading = viewModel.points {
-                ProgressView()
-            }
-        }
-        .listRowInsets(EdgeInsets())
-    }
-
+    /// A view that show there is a task in progress.
     var progress: some View {
         HStack {
             Spacer()
             ProgressView()
+                .progressViewStyle(.circular)
             Spacer()
         }
     }
 
+    /// A view that displays there is no pickup points.
     var empty: some View {
         Text("There are no available pickup-points around your address.")
             .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
     }
 
+    /// A view that displays the pickup points were failed to load.
     var failure: some View {
         VStack(spacing: 8) {
             Text("Something went wrong, please try again by pulling to refresh.")
@@ -127,23 +116,25 @@ struct PickupPointPicker: View {
                     .cornerRadius(4)
             }
         }
+        .frame(maxWidth: .infinity)
     }
 
+    /// A group of views where each view displays a pickup point.
     var rows: some View {
         ForEach(viewModel.points.data ?? []) { (point) in
             PickupPointRow(point: point, selected: $viewModel.selected)
                 .id(point.id)
-                .padding()
+                .frame(maxWidth: .infinity)
+                .padding(EdgeInsets(top: 16, leading: 10, bottom: 16, trailing: 16))
                 .background(Color(.systemBackground))
-                .listRowBackground(Color.clear)
                 .onTapGesture {
                     viewModel.selected = point.id
                 }
         }
     }
 
-    @ViewBuilder
-    var confirmButton: some View {
+    /// A view that lets user confirm for the currenly selected point.
+    @ViewBuilder var confirmButton: some View {
         if !viewModel.isConfirmButtonHidden {
             Button(action: viewModel.didTapConfirmButton) {
                 HStack(spacing: 8) {
@@ -165,7 +156,9 @@ struct PickupPointPicker: View {
         }
     }
 
-    func alert() -> Alert {
+    /// A model that describes the failure of selected point confirmation.
+    /// - Returns: A representation of an alert presentation.
+    func confirmationFailureAlert() -> Alert {
         Alert(
             title: Text("Error"),
             message: Text(viewModel.submittingSelectedPoint.error?.localizedDescription ?? ""),
@@ -177,120 +170,42 @@ struct PickupPointPicker: View {
 struct ContentView_Previews: PreviewProvider {
     // MARK: Preview
 
-    static var loaded: some View {
-        Group {
-            if #available(iOS 16.0, *) {
-                NavigationStack {
-                    PickupPointPicker(viewModel: .preview)
-                }
-            } else {
-                NavigationView {
-                    PickupPointPicker(viewModel: .preview)
-                }
-            }
-        }
-        .previewDisplayName("Loaded")
-    }
-
-    static var empty: some View {
-        Group {
-            if #available(iOS 16.0, *) {
-                NavigationStack {
-                    PickupPointPicker(viewModel: .empty)
-                }
-            } else {
-                NavigationView {
-                    PickupPointPicker(viewModel: .empty)
-                }
-            }
-        }
-        .previewDisplayName("Empty")
-    }
-
-    static var inProgressWithoutPoints: some View {
-        Group {
-            if #available(iOS 16.0, *) {
-                NavigationStack {
-                    PickupPointPicker(viewModel: .inProgressWithoutPoints)
-                }
-            } else {
-                NavigationView {
-                    PickupPointPicker(viewModel: .inProgressWithoutPoints)
-                }
-            }
-        }
-        .previewDisplayName("In Progress Without Data")
-    }
-
-    static var inProgressWithPoints: some View {
-        Group {
-            if #available(iOS 16.0, *) {
-                NavigationStack {
-                    PickupPointPicker(viewModel: .inProgressWithPoints)
-                }
-            } else {
-                NavigationView {
-                    PickupPointPicker(viewModel: .inProgressWithPoints)
-                }
-            }
-        }
-        .previewDisplayName("In Progress With Some Data")
-    }
-
-    static var failure: some View {
-        Group {
-            if #available(iOS 16.0, *) {
-                NavigationStack {
-                    PickupPointPicker(viewModel: .failure)
-                }
-            } else {
-                NavigationView {
-                    PickupPointPicker(viewModel: .failure)
-                }
-            }
-        }
-        .previewDisplayName("Failure")
-    }
-
-    static var submittingSelectedPoint: some View {
-        Group {
-            if #available(iOS 16.0, *) {
-                NavigationStack {
-                    PickupPointPicker(viewModel: .submittingSelectedPoint)
-                }
-            } else {
-                NavigationView {
-                    PickupPointPicker(viewModel: .submittingSelectedPoint)
-                }
-            }
-        }
-        .previewDisplayName("Submitting Selected Point")
-    }
-
-    static var submittedSelectedPointWithError: some View {
-        Group {
-            if #available(iOS 16.0, *) {
-                NavigationStack {
-                    PickupPointPicker(viewModel: .submittedSelectedPointWithError)
-                }
-            } else {
-                NavigationView {
-                    PickupPointPicker(viewModel: .submittedSelectedPointWithError)
-                }
-            }
-        }
-        .previewDisplayName("Submitted Selected Point With Error")
-    }
-
     static var previews: some View {
         Group {
-            loaded
-            empty
-            inProgressWithoutPoints
-            inProgressWithPoints
-            failure
-            submittingSelectedPoint
-            submittedSelectedPointWithError
+            NavigationView {
+                PickupPointPicker(viewModel: .preview)
+            }
+            .previewDisplayName("Loaded")
+
+            NavigationView {
+                PickupPointPicker(viewModel: .empty)
+            }
+            .previewDisplayName("Empty")
+
+            NavigationView {
+                PickupPointPicker(viewModel: .inProgressWithoutPoints)
+            }
+            .previewDisplayName("In Progress Without Data")
+
+            NavigationView {
+                PickupPointPicker(viewModel: .inProgressWithPoints)
+            }
+            .previewDisplayName("In Progress With Some Data")
+
+            NavigationView {
+                PickupPointPicker(viewModel: .failure)
+            }
+            .previewDisplayName("Failure")
+
+            NavigationView {
+                PickupPointPicker(viewModel: .submittingSelectedPoint)
+            }
+            .previewDisplayName("Submitting Selected Point")
+
+            NavigationView {
+                PickupPointPicker(viewModel: .submittedSelectedPointWithError)
+            }
+            .previewDisplayName("Submitted Selected Point With Error")
         }
     }
 }

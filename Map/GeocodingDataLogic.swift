@@ -29,33 +29,19 @@ final class GeocodingDataLogic: GeocodingDataLogicType {
     /// An interface for converting between geographic coordinates and place names.
     private let geocoder: CLGeocoder = CLGeocoder()
 
-    /// A dictionary that stores the possible postal address of a place name in pairs.
-    private var cache: [String: CLPlacemark] = [:]
-
     // MARK: GeocodingDataLogicType
 
     func geocode(address: String) -> AnyPublisher<CLPlacemark, Error> {
-        return Deferred { // Awaits subscription before running the supplied closure to create a publisher for the new subscriber.
+        Deferred { // Awaits subscription before running the supplied closure to create a publisher for the new subscriber.
             Future<CLPlacemark, Error> { (promise) in
-                // Returns the cache value if possible.
-                if let result = self.cache[address] { return promise(.success(result)) }
                 // Geocodes the place name to a postal address.
                 self.geocoder.geocodeAddressString(address) { (placemarks: [CLPlacemark]?, error: Error?) in
                     if let error {
-                        // Clears the associated cache entry.
-                        self.cache[address] = nil
-                        // Emits the result to the publisher.
-                        return promise(.failure(error))
+                        promise(.failure(error))
                     } else if let placemark = placemarks?.first {
-                        // Caches the latest value.
-                        self.cache[address] = placemark
-                        // Emits the result to the publisher.
                         promise(.success(placemark))
                     } else {
-                        // Clears the associated cache entry.
-                        self.cache[address] = nil
-                        // Emits the result to the publisher.
-                        return promise(.failure(GeocodingError.empty))
+                        promise(.failure(GeocodingError.empty))
                     }
                 }
             }
@@ -64,8 +50,6 @@ final class GeocodingDataLogic: GeocodingDataLogicType {
     }
 
     func geocode(address: String) async throws -> CLPlacemark {
-        // Returns the cache value if possible.
-        if let result = cache[address] { return result  }
         // Geocodes the place name to a postal address.
         guard
             let result = try await geocoder.geocodeAddressString(address).first
@@ -73,13 +57,6 @@ final class GeocodingDataLogic: GeocodingDataLogicType {
             throw GeocodingError.empty
         }
         return result
-    }
-
-    // MARK: State Changes
-
-    /// Resets cache storage to empty.
-    func reset() {
-        cache.removeAll()
     }
 }
 

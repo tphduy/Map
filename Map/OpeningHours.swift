@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A view that displays the opening hour per weekday.
 struct OpeningHours: View {
     // MARK: States
 

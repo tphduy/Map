@@ -13,10 +13,13 @@ struct VCCheckboxToggleStyle: ToggleStyle {
             configuration.isOn.toggle()
         } label: {
             HStack {
-                Image(systemName: configuration.isOn ? "circle.inset.filled" : "circle")
+                if #available(iOS 15, *) {
+                    Image(systemName: configuration.isOn ? "circle.inset.filled" : "circle")
+                } else {
+                    Image(systemName: configuration.isOn ? "circle.circle.fill" : "circle")
+                }
                 configuration.label
             }
         }
-
     }
 }
